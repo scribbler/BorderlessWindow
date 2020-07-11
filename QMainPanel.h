@@ -2,6 +2,8 @@
 #define QMAINPANEL_H
 
 #include <QMouseEvent>
+#include <QTabWidget>
+
 #include "qwinwidget.h"
 class TestWindow;
 class QMainPanel : public QWinWidget {
@@ -25,9 +27,8 @@ public slots:
     void buttonClick1();
 private:
     HWND windowHandle;
+    QTabWidget * tabWidget_;
     TestWindow * window1_;
-protected:
-
 };
 
 #endif // QMAINPANEL_H

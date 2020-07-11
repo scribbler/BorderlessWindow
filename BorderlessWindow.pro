@@ -4,13 +4,11 @@ LIBS += gdi32.lib dwmapi.lib
 
 HEADERS += \
     QMainPanel.h \
-    mainwindow1.h \
     BorderlessWindow.h \
     testwindow.h
 
 SOURCES += main.cpp \
     QMainPanel.cpp \
-    mainwindow1.cpp \
     BorderlessWindow.cpp \
     testwindow.cpp
 
@@ -23,5 +21,4 @@ RESOURCES += \
 OTHER_FILES += \
     BorderlessWindow.css
 
-FORMS += \
-    mainwindow1.ui
+FORMS +=

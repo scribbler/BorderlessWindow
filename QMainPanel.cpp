@@ -10,27 +10,26 @@
 #include "QMainPanel.h"
 #include <QDebug>
 #include <windowsx.h>
-#include "mainwindow1.h"
 #include "TestWindow.h"
 QMainPanel::QMainPanel( HWND hWnd ) : QWinWidget( hWnd ),window1_(nullptr) {
 
     windowHandle = hWnd;
 
     setObjectName( "mainPanel" );
-    this->setStyleSheet("background-color: rgb(255, 0, 127);");
+    this->setStyleSheet("background-color: rgb(175, 175, 175);");
+
+
+    // actionBar
+    QWidget * actioWidget = new QWidget( );
+    actioWidget->setGeometry(0,0,200,60);
+    actioWidget->setStyleSheet("background-color: rgb(255, 0, 127);");
+
+
     // Horizontal layout
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->setSpacing( 0 );
     horizontalLayout->setMargin( 0 );
-
-    // Window title
-    QLabel *windowTitle = new QLabel( this );
-    windowTitle->setObjectName( "windowTitle" );
-    windowTitle->setText( "Borderless window" );
-    windowTitle->setStyleSheet( "font-size: 16px; color: #444444;" );
-    windowTitle->setAttribute( Qt::WA_TransparentForMouseEvents );
-    horizontalLayout->addWidget( windowTitle );
-    horizontalLayout->addStretch();
+    actioWidget->setLayout(horizontalLayout);
 
     // System buttons
     // Minimize
@@ -51,25 +50,19 @@ QMainPanel::QMainPanel( HWND hWnd ) : QWinWidget( hWnd ),window1_(nullptr) {
     horizontalLayout->addWidget( pushButtonClose );
     QObject::connect( pushButtonClose, SIGNAL( clicked() ), this, SLOT( pushButtonCloseClicked() ) );
 
-    // Main panel layout
-    QGridLayout *mainGridLayout = new QGridLayout();
-    mainGridLayout->setSpacing( 0 );
-    mainGridLayout->setMargin( 0 );
-    setLayout( mainGridLayout );
 
-    // Central widget
-    QWidget *centralWidget = new QWidget( this );
-    centralWidget->setObjectName( "centralWidget" );
-    centralWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-
-
-    // Main panel scroll area
-    QScrollArea *scrollArea = new QScrollArea( this );
-    scrollArea->setWidgetResizable( true );
-    scrollArea->setObjectName( "mainPanelScrollArea" );
-    scrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-    scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
+    pushButtonMinimize->setMinimumHeight(30);
+    pushButtonMinimize->setMinimumWidth(30);
+    pushButtonMaximize->setMinimumHeight(30);
+    pushButtonMaximize->setMinimumWidth(30);
+    pushButtonClose->setMinimumHeight(30);
+    pushButtonClose->setMinimumWidth(30);
+    // tabWidet
+    tabWidget_ = new QTabWidget();
+    tabWidget_->setMinimumHeight(100);
+    tabWidget_->setStyleSheet("QTabBar::tab { height: 30px; width: 100px; };");
+    tabWidget_->setCornerWidget(actioWidget, Qt::TopRightCorner);
+    tabWidget_->cornerWidget()->setMinimumHeight(30);
 
     // Vertical layout example
     QVBoxLayout *verticalLayout = new QVBoxLayout();
@@ -77,30 +70,27 @@ QMainPanel::QMainPanel( HWND hWnd ) : QWinWidget( hWnd ),window1_(nullptr) {
     verticalLayout->setMargin( 0 );
     verticalLayout->setAlignment( Qt::AlignHCenter );
     verticalLayout->addLayout( horizontalLayout );
+    verticalLayout->addWidget(tabWidget_);
+    this->setLayout(verticalLayout);
 
-    // Label example
-    QLabel *label = new QLabel( centralWidget );
-    label->setObjectName( "Label" );
-    label->setText( "Hello World! This is QLabel." );
-    label->setStyleSheet( "font-size: 48px" );
-    verticalLayout->addWidget( label );
+    for( int i=0;i<20;i++)
+    {
+        QWidget * w = new QWidget;
+        if( i==0){
+            QPushButton *button = new QPushButton( "button", w );
+            button->setObjectName( "button" );
+            button->setGeometry(QRect(50, 50, 80, 20));
+            QObject::connect( button, SIGNAL( clicked() ), this, SLOT( buttonClick() ) );
 
-    QPushButton *button = new QPushButton( "button", this );
-    button->setObjectName( "button" );
-    verticalLayout->addWidget( button );
-    QObject::connect( button, SIGNAL( clicked() ), this, SLOT( buttonClick() ) );
-
-    QPushButton *button1 = new QPushButton( "button1", this );
-    button1->setObjectName( "button1" );
-    verticalLayout->addWidget( button1 );
-    QObject::connect( button1, SIGNAL( clicked() ), this, SLOT( buttonClick1() ) );
-
+            QPushButton *button1 = new QPushButton( "button1", w );
+            button1->setObjectName( "button1" );
+            button1->setGeometry(QRect(50, 100, 80, 20));
+            QObject::connect( button1, SIGNAL( clicked() ), this, SLOT( buttonClick1() ) );
+        }
+        tabWidget_->addTab(w,QString("tab index:%1").arg(i+1));
+    }
 
     // Show
-    centralWidget->setLayout( verticalLayout );
-    scrollArea->setWidget( centralWidget );
-    mainGridLayout->addWidget( scrollArea );
-
     show();
 }
 QMainPanel::~QMainPanel()
