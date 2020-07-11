@@ -1,4 +1,4 @@
-
+﻿
 /****************************************************************************
 **
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
@@ -98,6 +98,12 @@ QWinWidget::QWinWidget(HWND hParentWnd, QObject *parent, Qt::WindowFlags f)
 
     init();
 }
+QWinWidget::QWinWidget(QObject *parent, Qt::WindowFlags f  )
+    :QWidget(0, f), hParent(nullptr), prevFocus(0), reenable_parent(false)
+{
+    if (parent)
+        QObject::setParent(parent);
+}
 
 #ifdef QTWINMIGRATE_WITHMFC
 /*!
@@ -117,6 +123,11 @@ QWinWidget::QWinWidget(CWnd *parentWnd, QObject *parent, Qt::WindowFlags f)
 }
 #endif
 
+void QWinWidget::init(HWND hParentWnd)
+{
+    hParent = hParentWnd;
+    init();
+}
 
 void QWinWidget::init()
 {

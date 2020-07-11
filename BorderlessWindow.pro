@@ -3,12 +3,18 @@ CONFIG += app_bundle
 LIBS += gdi32.lib dwmapi.lib
 
 HEADERS += \
-    MainWindow.h \
-    QMainPanel.h
+    QMainPanel.h \
+    mainwindow1.h \
+    BorderlessWindow.h \
+    QFramelessWindow.h \
+    testwindow.h
 
 SOURCES += main.cpp \
-    MainWindow.cpp \
-    QMainPanel.cpp
+    QMainPanel.cpp \
+    mainwindow1.cpp \
+    BorderlessWindow.cpp \
+    QFramelessWindow.cpp \
+    testwindow.cpp
 
 include("QtWinMigrate.pri")
 include("Common.pri")
@@ -18,3 +24,6 @@ RESOURCES += \
 
 OTHER_FILES += \
     BorderlessWindow.css
+
+FORMS += \
+    mainwindow1.ui

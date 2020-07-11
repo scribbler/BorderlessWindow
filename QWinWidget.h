@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
@@ -69,11 +69,13 @@ class QT_QTWINMIGRATE_EXPORT QWinWidget : public QWidget
     Q_OBJECT
 public:
     QWinWidget( HWND hParentWnd, QObject *parent = 0, Qt::WindowFlags f = 0 );
+    QWinWidget(QObject *parent = 0, Qt::WindowFlags f = 0 );
 #ifdef QTWINMIGRATE_WITHMFC
     QWinWidget( CWnd *parnetWnd, QObject *parent = 0, Qt::WindowFlags f = 0 );
 #endif
     ~QWinWidget();
 
+    void init(HWND hParentWnd);
     void show();
     void center();
     void showCentered();
