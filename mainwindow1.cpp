@@ -34,8 +34,6 @@ MainWindow1::MainWindow1(QWidget *parent) :
     ui->tabWidget->setCornerWidget(widget,Qt::TopRightCorner);
     ui->tabWidget->cornerWidget()->setMinimumHeight(60);
     ui->tabWidget->cornerWidget()->move(0,0);
-//    ui->tabWidget->cornerWidget()->setGeometry(0,0,300,100);
-
 
 }
 
