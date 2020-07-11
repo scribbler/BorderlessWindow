@@ -1,9 +1,6 @@
 ﻿#include <windows.h>
-
-#include "QMainPanel.h"
-#include "qwinwidget.h"
-
 #include <QApplication>
+#include "QWinWidget.h"
 
 class BorderlessWindow
 {
@@ -12,7 +9,17 @@ class BorderlessWindow
         windowed = ( WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME | WS_CLIPCHILDREN | WS_SYSMENU  ),
         aero_borderless = ( WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME | WS_CLIPCHILDREN )
     };
-
+public:
+    ///
+    /// \brief winWidgetDestroy
+    /// QWinWidget destroy
+    ///
+    virtual void winWidgetDestroy(){}
+    ///
+    /// \brief resizeWindow
+    /// \param showCmd SW_MAXIMIZE,SW_MINIMIZE
+    ///
+    virtual void resizeWindow(int showCmd, RECT winrect){}
 public:
     HWND hWnd;
     HINSTANCE hInstance;
@@ -42,15 +49,18 @@ public:
     int getMaximumWidth();
     void removeMaximumSize();
 
-private:
-    void initUI( QApplication *app, HBRUSH windowBackground, const int x, const int y, const int width, const int height);
+    HWND winId() const;
+    void setWinId(const HWND &value);
     void setBorderless(bool isBorderless);
     void setShadow(bool isShadow);
+private:
+    void initUI( QApplication *app, HBRUSH windowBackground, const int x, const int y, const int width, const int height );
+
     static LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
+
 private:
     static QApplication *a;
-    QMainPanel *mainPanel;
-    HWND winId;
+    HWND winId_;
     bool closed;
     bool visible;
 

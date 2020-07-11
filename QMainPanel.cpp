@@ -11,13 +11,13 @@
 #include <QDebug>
 #include <windowsx.h>
 #include "mainwindow1.h"
-#include "BorderlessWindow.h"
+#include "TestWindow.h"
 QMainPanel::QMainPanel( HWND hWnd ) : QWinWidget( hWnd ),window1_(nullptr) {
 
     windowHandle = hWnd;
 
     setObjectName( "mainPanel" );
-
+    this->setStyleSheet("background-color: rgb(255, 0, 127);");
     // Horizontal layout
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->setSpacing( 0 );
@@ -171,7 +171,7 @@ void QMainPanel::buttonClick()
     //    mw->show();
     qDebug()<<__FUNCTION__<<window1_;
     if( window1_==nullptr)
-        window1_ = new BorderlessWindow();
+        window1_ = new TestWindow();
     window1_->show();
 }
 void QMainPanel::buttonClick1()

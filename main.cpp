@@ -1,6 +1,5 @@
 ﻿#include <QFile>
-#include "BorderlessWindow.h"
-#include "QFramelessWindow.h"
+#include "testwindow.h"
 
 int main( int argc, char *argv[] ) {
     QApplication application( argc, argv );
@@ -17,7 +16,7 @@ int main( int argc, char *argv[] ) {
     mainFont.setStyleStrategy( QFont::PreferAntialias );
     application.setFont( mainFont );
 
-    BorderlessWindow window;
+    TestWindow window;
     window.show();
     //  // Background color
     //  // This is only for WinApi window, Qt widgets use BorderlessWindow.css stylesheet

@@ -17,10 +17,8 @@ BorderlessWindow::BorderlessWindow()
       aeroShadow( false ),
       closed( false ),
       visible( false ),
-      mainPanel(nullptr),
-      winId(0)
+      winId_(0)
 {
-
     HBRUSH windowBackground = CreateSolidBrush( RGB( 255, 255, 255 ) );
 
     int x = 100;
@@ -37,15 +35,14 @@ BorderlessWindow::BorderlessWindow( QApplication *app, HBRUSH windowBackground, 
       aeroShadow( false ),
       closed( false ),
       visible( false ),
-      mainPanel(nullptr),
-      winId(0)
+      winId_(0)
 {
     initUI(app, windowBackground, x, y, width, height);
 }
 
 void BorderlessWindow::initUI( QApplication *app, HBRUSH windowBackground, const int x, const int y, const int width, const int height)
 {
-    qInfo()<<__FUNCTION__<<this;
+    qInfo()<<__FUNCTION__;
     WNDCLASSEX wcx = { 0 };
     wcx.cbSize = sizeof( WNDCLASSEX );
     wcx.style = CS_HREDRAW | CS_VREDRAW;
@@ -66,13 +63,9 @@ void BorderlessWindow::initUI( QApplication *app, HBRUSH windowBackground, const
     if ( !hWnd ) throw std::runtime_error( "Couldn't create window because of reasons" );
 
     SetWindowLongPtr( hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
-
-    mainPanel = new QMainPanel( hWnd );
-    winId = ( HWND )mainPanel->winId();
     setBorderless(borderless);
 
     //    show();
-
     //    toggleBorderless();
 
     a = app;
@@ -80,14 +73,9 @@ void BorderlessWindow::initUI( QApplication *app, HBRUSH windowBackground, const
 
 BorderlessWindow::~BorderlessWindow()
 {
-    qDebug()<<__FUNCTION__<<this;
+    qInfo()<<__FUNCTION__;
 
     hide();
-    if( mainPanel)
-    {
-        delete mainPanel;
-    }
-    mainPanel = nullptr;
     if(hWnd)
     {
         DestroyWindow( hWnd );
@@ -114,7 +102,7 @@ LRESULT CALLBACK BorderlessWindow::WndProc( HWND hWnd, UINT message, WPARAM wPar
             case VK_F6: {
                 window->toggleShadow();
                 window->toggleBorderless();
-                SetFocus( window->winId );
+                SetFocus( window->winId() );
                 break;
             }
             case VK_F7: {
@@ -125,7 +113,7 @@ LRESULT CALLBACK BorderlessWindow::WndProc( HWND hWnd, UINT message, WPARAM wPar
 
             if ( wParam != VK_TAB ) return DefWindowProc( hWnd, message, wParam, lParam );
 
-            SetFocus(  window->winId );
+            SetFocus(  window->winId() );
         }
         break;
     }
@@ -192,7 +180,7 @@ LRESULT CALLBACK BorderlessWindow::WndProc( HWND hWnd, UINT message, WPARAM wPar
     {
         if(window)
         {
-            SetFocus(  window->winId );
+            SetFocus(  window->winId() );
         }
         break;
     }
@@ -207,24 +195,29 @@ LRESULT CALLBACK BorderlessWindow::WndProc( HWND hWnd, UINT message, WPARAM wPar
     }
     case WM_DESTROY:
     {
-        qDebug()<<__FUNCTION__<<"WM_DESTROY"<<window;
-        if( window->mainPanel )
+        qInfo()<<__FUNCTION__<<"WM_DESTROY";
+        if(window)
         {
-            delete( window->mainPanel );
+            window->winWidgetDestroy();
         }
-        window->mainPanel = nullptr;
+//        if( window->mainPanel )
+//        {
+//            window->winWidgetDestroy();
+//            delete( window->mainPanel );
+//        }
+//        window->mainPanel = nullptr;
 
         // PostQuitMessage(0);
         break;
     }
     case WM_CLOSE:
     {
-        qDebug()<<__FUNCTION__<<"WM_CLOSE"<<window;
+        qInfo()<<__FUNCTION__<<"WM_CLOSE";
         break;
     }
     case WM_QUIT:
     {
-        qDebug()<<__FUNCTION__<<"WM_QUIT"<<window;
+        qInfo()<<__FUNCTION__<<"WM_QUIT";
         break;
     }
     case WM_NCHITTEST:
@@ -297,18 +290,23 @@ LRESULT CALLBACK BorderlessWindow::WndProc( HWND hWnd, UINT message, WPARAM wPar
         WINDOWPLACEMENT wp;
         wp.length = sizeof( WINDOWPLACEMENT );
         GetWindowPlacement( hWnd, &wp );
-        if(window&&window->mainPanel)
+        if( window )
         {
-            if ( wp.showCmd == SW_MAXIMIZE ) {
-                QPushButton* pushButtonMaximize = window->mainPanel->findChild<QPushButton*>( "pushButtonMaximize" );
-                pushButtonMaximize->setStyleSheet( "#pushButtonMaximize {image: url(:/SystemMenu/Icons/Restore.png);} #pushButtonMaximize:hover { image: url(:/SystemMenu/Icons/RestoreHover.png); }" );
-                window->mainPanel->setGeometry( 16, 16, winrect.right - 32, winrect.bottom - 32 );
-            } else {
-                QPushButton* pushButtonMaximize = window->mainPanel->findChild<QPushButton*>( "pushButtonMaximize" );
-                pushButtonMaximize->setStyleSheet( "#pushButtonMaximize {image: url(:/SystemMenu/Icons/Maximize.png);} #pushButtonMaximize:hover { image: url(:/SystemMenu/Icons/MaximizeHover.png); }" );
-                window->mainPanel->setGeometry( 8, 8, winrect.right - 16, winrect.bottom - 16 );
-            }
+            window->resizeWindow(wp.showCmd, winrect);
         }
+
+//        if(window&&window->mainPanel)
+//        {
+//            if ( wp.showCmd == SW_MAXIMIZE ) {
+//                QPushButton* pushButtonMaximize = window->mainPanel->findChild<QPushButton*>( "pushButtonMaximize" );
+//                pushButtonMaximize->setStyleSheet( "#pushButtonMaximize {image: url(:/SystemMenu/Icons/Restore.png);} #pushButtonMaximize:hover { image: url(:/SystemMenu/Icons/RestoreHover.png); }" );
+//                window->mainPanel->setGeometry( 16, 16, winrect.right - 32, winrect.bottom - 32 );
+//            } else {
+//                QPushButton* pushButtonMaximize = window->mainPanel->findChild<QPushButton*>( "pushButtonMaximize" );
+//                pushButtonMaximize->setStyleSheet( "#pushButtonMaximize {image: url(:/SystemMenu/Icons/Maximize.png);} #pushButtonMaximize:hover { image: url(:/SystemMenu/Icons/MaximizeHover.png); }" );
+//                window->mainPanel->setGeometry( 8, 8, winrect.right - 16, winrect.bottom - 16 );
+//            }
+//        }
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
@@ -330,6 +328,16 @@ LRESULT CALLBACK BorderlessWindow::WndProc( HWND hWnd, UINT message, WPARAM wPar
     }
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+HWND BorderlessWindow::winId() const
+{
+    return winId_;
+}
+
+void BorderlessWindow::setWinId(const HWND &value)
+{
+    winId_ = value;
 }
 
 void BorderlessWindow::setBorderless(bool isBorderless)

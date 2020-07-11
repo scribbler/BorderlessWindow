@@ -3,7 +3,7 @@
 
 #include <QMouseEvent>
 #include "qwinwidget.h"
-class BorderlessWindow;
+class TestWindow;
 class QMainPanel : public QWinWidget {
   Q_OBJECT
 
@@ -25,7 +25,7 @@ public slots:
     void buttonClick1();
 private:
     HWND windowHandle;
-    BorderlessWindow * window1_;
+    TestWindow * window1_;
 protected:
 
 };

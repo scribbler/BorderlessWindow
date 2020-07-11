@@ -6,14 +6,12 @@ HEADERS += \
     QMainPanel.h \
     mainwindow1.h \
     BorderlessWindow.h \
-    QFramelessWindow.h \
     testwindow.h
 
 SOURCES += main.cpp \
     QMainPanel.cpp \
     mainwindow1.cpp \
     BorderlessWindow.cpp \
-    QFramelessWindow.cpp \
     testwindow.cpp
 
 include("QtWinMigrate.pri")
